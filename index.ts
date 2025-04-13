@@ -25,13 +25,12 @@ import definePlugin, { OptionType } from "@utils/types";
 //#endregion
 
 function startFunc() {
-    console.log("start")
     for (const key in dictOfCommands) {
-    if (dictOfCommands.hasOwnProperty(key)) {
-      const item = dictOfCommands[key];
-      if (settings.store[item.name]) {
-        enableCommand(item);
-      }
+        if (dictOfCommands.hasOwnProperty(key)) {
+            const item = dictOfCommands[key];
+            if (settings.store[item.name]) {
+                enableCommand(item);
+            }
     }
   }
 }
@@ -193,63 +192,6 @@ function MirrorV(input: string, ctx: any): string {
 //#endregion
 
 
-const settings = definePluginSettings({
-    rnd: {
-        type: OptionType.BOOLEAN,
-        description: "Enable or disable /rnd command. Creates a random string using a mix of English letters, Russian letters, and numbers",
-        restartNeeded: true,
-        default: true
-    },
-    rndEnglish: {
-        type: OptionType.BOOLEAN,
-        description: "Enable or disable /rndEnglish command. Generates a random string with only English letters and numbers",
-        restartNeeded: true,
-        default: true
-    },
-    toi: {
-        type: OptionType.BOOLEAN,
-        description: "Enable or disable /toi command. A command for Russian users that swaps vowels with 'і,' inspired by the Кріб meme",
-        restartNeeded: true,
-        default: true
-    },
-    fall: {
-        type: OptionType.BOOLEAN,
-        description: "Enable or disable /fall command. Turns your text into a vertical stack",
-        restartNeeded: true,
-        default: true
-    },
-    hide: {
-        type: OptionType.BOOLEAN,
-        description: "Enable or disable /hide command. Conceals each letter of your text under its own spoiler",
-        restartNeeded: true,
-        default: true
-    },
-    mock: {
-        type: OptionType.BOOLEAN,
-        description: "Enable or disable /mock command. Transforms your text into a quirky style, like tHiS eXaMpLe",
-        restartNeeded: true,
-        default: true
-    },
-    echo: {
-        type: OptionType.BOOLEAN,
-        description: "Enable or disable /echo command. Sends a virtual message from the bot 'Clyde' that only you can see",
-        restartNeeded: true,
-        default: true
-    },
-    mirrorV: {
-        type: OptionType.BOOLEAN,
-        description: "Enable or disable /mirrorV command. Flips your text backward, e.g., Example becomes elpmaxE",
-        restartNeeded: true,
-        default: true
-    },
-    mirrorH: {
-        type: OptionType.BOOLEAN,
-        description: "Enable or disable /mirrorH command. Inverts your text upside down, e.g., Example becomes ǝןdɯɐxǝ",
-        restartNeeded: true,
-        default: true
-    },
-});
-
 const dictOfCommands = {
     rnd: {
         name: "rnd",
@@ -324,6 +266,20 @@ const dictOfCommands = {
         optType: ApplicationCommandOptionType.STRING
     },
 };
+
+const settings = definePluginSettings(
+    Object.fromEntries(
+        Object.entries(dictOfCommands).map(([key, command]) => [
+            command.name,
+            {
+                type: OptionType.BOOLEAN,
+                description: `Enable or disable /${command.name} command. ${command.desc}`,
+                restartNeeded: true,
+                default: true
+            }
+        ])
+    )
+);
 
 function enableCommand(dict: { [key: string]: any }) {
     registerCommand({
